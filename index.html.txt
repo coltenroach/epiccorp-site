@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EPIC Systems Corp</title>
+  <style>
+    :root {
+      --bg: #08111f;
+      --bg-2: #0d1a2d;
+      --panel: rgba(255,255,255,0.06);
+      --panel-2: rgba(255,255,255,0.09);
+      --line: rgba(255,255,255,0.12);
+      --text: #f5f8fd;
+      --muted: #aebbd0;
+      --cyan: #67e5ff;
+      --cyan-soft: rgba(103,229,255,0.14);
+      --blue-soft: rgba(92,129,255,0.18);
+      --shadow: 0 24px 70px rgba(0,0,0,0.34);
+      --radius: 24px;
+      --radius-lg: 34px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: #08111f;
+      overscroll-behavior: none;
+    }
+    body {
+      position: relative;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(77, 206, 255, 0.2), transparent 25%),
+        radial-gradient(circle at left center, rgba(90, 112, 255, 0.18), transparent 24%),
+        linear-gradient(180deg, #06101c 0%, #091625 45%, #08111f 100%);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(circle at top right, rgba(77, 206, 255, 0.2), transparent 25%),
+        radial-gradient(circle at left center, rgba(90, 112, 255, 0.18), transparent 24%),
+        linear-gradient(180deg, #06101c 0%, #091625 45%, #08111f 100%);
+      pointer-events: none;
+    }
+
+    a, button { -webkit-tap-highlight-color: transparent; }
+    a { color: inherit; text-decoration: none; }
+    button {
+      font-family: inherit;
+      color: inherit;
+    }
+
+    .container {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(18px);
+      background: rgba(7, 14, 24, 0.82);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      border-radius: 18px;
+      padding: 6px;
+      transition: background .18s ease;
+    }
+
+    .logo-link:hover,
+    .logo-link:focus-visible {
+      background: rgba(255,255,255,0.05);
+      outline: none;
+    }
+
+    .logo-badge {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #03121d;
+      background: linear-gradient(135deg, #88efff, #ffffff 55%, #b7d9ff);
+      box-shadow: 0 12px 30px rgba(255,255,255,0.18);
+    }
+
+    .logo-text strong {
+      display: block;
+      font-size: 1rem;
+      letter-spacing: 0.16em;
+    }
+
+    .logo-text span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.84rem;
+      margin-top: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 0.95rem;
+      color: #dbe6f5;
+    }
+
+    .nav-link {
+      border-radius: 999px;
+      padding: 10px 14px;
+      transition: background .18s ease, color .18s ease;
+      cursor: pointer;
+    }
+
+    .nav-link:hover,
+    .nav-link.active,
+    .nav-link:focus-visible {
+      color: #ffffff;
+      background: rgba(255,255,255,0.06);
+      outline: none;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border-radius: 999px;
+      padding: 14px 20px;
+      font-weight: 700;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+      font-size: 0.98rem;
+    }
+
+    .btn:hover,
+    .btn:focus-visible { transform: translateY(-1px); outline: none; }
+
+    .btn-primary {
+      background: #ffffff;
+      color: #09131f;
+      box-shadow: 0 12px 30px rgba(255,255,255,0.12);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.05);
+      color: #ffffff;
+      border-color: var(--line);
+    }
+
+    .btn-accent {
+      background: var(--cyan-soft);
+      color: #e3fbff;
+      border-color: rgba(103,229,255,0.3);
+    }
+
+    .mobile-toggle {
+      display: none;
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .mobile-menu {
+      display: none;
+      padding: 0 0 18px;
+      gap: 10px;
+    }
+
+    .mobile-menu.open {
+      display: grid;
+    }
+
+    .mobile-link {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+      color: #edf5ff;
+      cursor: pointer;
+    }
+
+    .mobile-link:hover,
+    .mobile-link:focus-visible {
+      background: rgba(255,255,255,0.08);
+      outline: none;
+    }
+
+    .page-shell {
+      min-height: calc(100vh - 79px);
+    }
+
+    .page {
+      display: none;
+      padding: 46px 0 56px;
+      animation: fadeIn .28s ease;
+    }
+
+    .page.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-grid,
+    .split-grid,
+    .contact-grid,
+    .cta-grid {
+      display: grid;
+      gap: 22px;
+    }
+
+    .hero-grid,
+    .cta-grid { grid-template-columns: 1.08fr 0.92fr; }
+    .split-grid,
+    .contact-grid { grid-template-columns: 1fr 1fr; }
+
+    .eyebrow,
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(103,229,255,0.18);
+      background: rgba(255,255,255,0.04);
+      color: #d3faff;
+      text-transform: uppercase;
+      font-size: 0.79rem;
+      letter-spacing: 0.09em;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 18px 0 0;
+      font-size: clamp(2.5rem, 5.4vw, 5rem);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+      max-width: 820px;
+    }
+
+    h2 {
+      margin: 14px 0 0;
+      font-size: clamp(2rem, 3.4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+    }
+
+    .lead,
+    .body-copy {
+      color: var(--muted);
+      line-height: 1.85;
+      font-size: 1.05rem;
+      max-width: 760px;
+      margin-top: 18px;
+    }
+
+    .hero-buttons,
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 26px;
+    }
+
+    .stat-row,
+    .grid-3,
+    .industry-grid,
+    .feature-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .stat-row,
+    .grid-3,
+    .industry-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .stat-chip,
+    .industry,
+    .mini-card,
+    .card-link,
+    .feature-item {
+      display: block;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      text-align: left;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+    }
+
+    .stat-chip,
+    .industry,
+    .feature-item { padding: 20px; }
+    .mini-card { padding: 18px; }
+    .card-link { padding: 0; overflow: hidden; }
+
+    .stat-chip:hover,
+    .stat-chip:focus-visible,
+    .industry:hover,
+    .industry:focus-visible,
+    .mini-card:hover,
+    .mini-card:focus-visible,
+    .card-link:hover,
+    .card-link:focus-visible,
+    .feature-item:hover,
+    .feature-item:focus-visible {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(103,229,255,0.28);
+      outline: none;
+    }
+
+    .glass-panel,
+    .contact-box,
+    .cta-panel,
+    .page-panel {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      box-shadow: var(--shadow);
+      padding: 26px;
+    }
+
+    .panel-label,
+    .small-label {
+      color: #cbf8ff;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.82rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .mini-stack { display: grid; gap: 14px; }
+
+    .mini-card h3,
+    .card h3,
+    .feature-item h3,
+    .industry strong {
+      margin: 0 0 8px;
+      font-size: 1.08rem;
+      letter-spacing: -0.02em;
+    }
+
+    .mini-card p,
+    .card p,
+    .feature-item p,
+    .industry span,
+    .contact-box p,
+    .cta-panel p,
+    .page-panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.78;
+    }
+
+    .panel-note {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 18px;
+      background: var(--cyan-soft);
+      border: 1px solid rgba(103,229,255,0.24);
+      color: #defdff;
+      line-height: 1.75;
+      font-size: 0.95rem;
+    }
+
+    .card {
+      padding: 26px;
+      height: 100%;
+    }
+
+    .card .linkish,
+    .industry .linkish {
+      display: inline-flex;
+      margin-top: 16px;
+      color: #c7f7ff;
+      font-weight: 700;
+    }
+
+    .banded {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      padding: 30px 0;
+      margin: 30px 0;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .check-item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.05);
+      color: #edf7ff;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--cyan);
+      box-shadow: 0 0 0 6px rgba(103,229,255,0.14);
+      flex: 0 0 auto;
+    }
+
+    .field {
+      width: 100%;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(6,12,22,0.72);
+      padding: 15px 16px;
+      color: #ecf5ff;
+      font-size: 0.98rem;
+      outline: none;
+      margin-bottom: 14px;
+    }
+
+    .field::placeholder { color: #8ea1bb; }
+    .field:focus {
+      border-color: rgba(103,229,255,0.5);
+      box-shadow: 0 0 0 4px rgba(103,229,255,0.08);
+    }
+    textarea.field { min-height: 150px; resize: vertical; }
+
+    .footer {
+      padding: 12px 0 40px;
+      color: #91a0b6;
+      font-size: 0.92rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .footer button {
+      background: none;
+      border: none;
+      color: #d7f8ff;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      cursor: pointer;
+      padding: 0;
+      font-size: inherit;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .split-grid,
+      .contact-grid,
+      .cta-grid,
+      .grid-3,
+      .industry-grid,
+      .stat-row {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links,
+      .desktop-cta { display: none; }
+      .mobile-toggle { display: inline-grid; place-items: center; }
+    }
+
+    @media (max-width: 640px) {
+      .container { width: min(var(--max), calc(100% - 20px)); }
+      .page { padding-top: 28px; }
+      .btn { width: 100%; }
+      .hero-buttons,
+      .button-row { flex-direction: column; }
+      .glass-panel, .card, .contact-box, .cta-panel, .page-panel { padding: 20px; }
+      h1 { font-size: clamp(2.1rem, 11vw, 3.3rem); }
+      .footer { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container">
+      <nav class="nav">
+        <a class="logo-link route-link" href="#home" data-route="home" aria-label="Go to home page">
+          <div class="logo-badge">E</div>
+          <div class="logo-text">
+            <strong>EPIC</strong>
+            <span>AI + Cloud Solutions for Regulated Industries</span>
+          </div>
+        </a>
+
+        <div class="nav-links">
+          <a class="nav-link route-link" href="#home" data-route="home">Home</a>
+          <a class="nav-link route-link" href="#services" data-route="services">Services</a>
+          <a class="nav-link route-link" href="#industries" data-route="industries">Industries</a>
+          <a class="nav-link route-link" href="#about" data-route="about">About</a>
+          <a class="nav-link route-link" href="#contact" data-route="contact">Contact</a>
+        </div>
+
+        <button class="btn btn-accent desktop-cta route-link" data-route="contact">Book a Consultation</button>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Open menu">☰</button>
+      </nav>
+
+      <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-link route-link" data-route="home">Home</button>
+        <button class="mobile-link route-link" data-route="services">Services</button>
+        <button class="mobile-link route-link" data-route="industries">Industries</button>
+        <button class="mobile-link route-link" data-route="about">About</button>
+        <button class="mobile-link route-link" data-route="contact">Contact</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="page active" data-page="home">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Trusted AI, Cloud, and Automation Strategy</div>
+          <h1>Modernize service, operations, and patient experience with a sharper AI strategy.</h1>
+          <p class="lead">
+            EPIC helps organizations in healthcare and other regulated industries adopt AI, cloud,
+            and contact center solutions that improve responsiveness, reduce friction, and support better outcomes.
+          </p>
+          <div class="hero-buttons">
+            <button class="btn btn-primary route-link" data-route="contact">Schedule a Consultation</button>
+            <button class="btn btn-secondary route-link" data-route="services">Explore Services</button>
+          </div>
+          <div class="stat-row" style="margin-top:30px;">
+            <button class="stat-chip route-link" data-route="services">Agentic AI workflows</button>
+            <button class="stat-chip route-link" data-route="industries">Healthcare-aware positioning</button>
+            <button class="stat-chip route-link" data-route="about">Cloud-first implementation</button>
+          </div>
+        </div>
+
+        <div class="glass-panel">
+          <div class="panel-label">What clients need most</div>
+          <div class="mini-stack">
+            <button class="mini-card route-link" data-route="contact">
+              <h3>Faster response times</h3>
+              <p>Use AI agents and automation to resolve common requests instantly and reduce operational drag.</p>
+            </button>
+            <button class="mini-card route-link" data-route="contact">
+              <h3>Better stakeholder experience</h3>
+              <p>Create smoother service journeys for patients, customers, and internal teams with less friction.</p>
+            </button>
+            <button class="mini-card route-link" data-route="contact">
+              <h3>Less vendor confusion</h3>
+              <p>Get guided toward the right-fit platform partners and deployment model instead of generic tech bundles.</p>
+            </button>
+          </div>
+          <div class="panel-note">
+            A cleaner homepage builds trust faster, explains your services in one scroll, and creates one obvious next step for prospects.
+          </div>
+        </div>
+      </div>
+
+      <div class="container" style="padding-top:34px;">
+        <div class="cta-grid">
+          <div class="page-panel">
+            <div class="small-label">Quick paths</div>
+            <h2>Choose where to go next.</h2>
+            <p class="body-copy">Use the multi-page layout to guide different visitors to the exact information they need instead of forcing everything into one long homepage.</p>
+            <div class="button-row">
+              <button class="btn btn-secondary route-link" data-route="services">View services</button>
+              <button class="btn btn-secondary route-link" data-route="industries">See industries</button>
+              <button class="btn btn-secondary route-link" data-route="about">Why EPIC</button>
+            </div>
+          </div>
+          <div class="cta-panel">
+            <div class="small-label">Suggested structure</div>
+            <h2 style="font-size:2rem;">Home • Services • Industries • About • Contact</h2>
+            <p>This behaves like a small multi-page site inside one Wix HTML embed, so you only paste one file but still get separate page views.</p>
+            <button class="btn btn-primary route-link" data-route="contact">Start a conversation</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" data-page="services">
+      <div class="container">
+        <div class="kicker">Services</div>
+        <h1 style="font-size:clamp(2.3rem,4.8vw,4.2rem);max-width:900px;">A clearer story from strategy to execution.</h1>
+        <p class="lead">Instead of presenting disconnected offerings, this layout groups your capabilities into service pillars that are easier to understand and easier to buy.</p>
+
+        <div class="grid-3" style="margin-top:28px;">
+          <button class="card-link route-link" data-route="contact">
+            <div class="card">
+              <h3>Agentic AI Automation</h3>
+              <p>Deploy AI agents that handle repetitive service workflows, surface context, and guide customers or patients to resolution faster.</p>
+              <span class="linkish">Talk to EPIC about this →</span>
+            </div>
+          </button>
+          <button class="card-link route-link" data-route="contact">
+            <div class="card">
+              <h3>Healthcare AI Solutions</h3>
+              <p>Use AI responsibly across clinical, operational, and patient-facing workflows with privacy-conscious implementation.</p>
+              <span class="linkish">Talk to EPIC about this →</span>
+            </div>
+          </button>
+          <button class="card-link route-link" data-route="contact">
+            <div class="card">
+              <h3>Cloud & Contact Center Modernization</h3>
+              <p>Modernize communications, customer support, and infrastructure with scalable cloud platforms built for growth.</p>
+              <span class="linkish">Talk to EPIC about this →</span>
+            </div>
+          </button>
+        </div>
+
+        <div class="banded">
+          <div class="container" style="width:100%;">
+            <div class="split-grid">
+              <div class="page-panel">
+                <div class="small-label">What this page does</div>
+                <h2>Turn a long homepage into focused service pages.</h2>
+                <p>Each service area can become its own future page later. For now, this page acts as the high-level services hub.</p>
+              </div>
+              <div class="page-panel">
+                <div class="small-label">Next action</div>
+                <h2>Guide the visitor to contact.</h2>
+                <p>Every service card routes to the contact page so a prospect always has a next step instead of hitting a dead end.</p>
+                <div class="button-row">
+                  <button class="btn btn-primary route-link" data-route="contact">Request a consultation</button>
+                  <button class="btn btn-secondary route-link" data-route="home">Back home</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" data-page="industries">
+      <div class="container">
+        <div class="kicker">Industries</div>
+        <h1 style="font-size:clamp(2.3rem,4.8vw,4.2rem);max-width:900px;">Specialized positioning for higher-trust markets.</h1>
+        <p class="lead">This version leads with the strongest angle: practical AI and modernization support for healthcare and other regulated environments where reliability matters.</p>
+
+        <div class="industry-grid" style="margin-top:28px;">
+          <button class="industry route-link" data-route="contact"><strong>Healthcare</strong><span>Clinical, operational, and patient-facing service transformation.</span><span class="linkish">Ask about healthcare →</span></button>
+          <button class="industry route-link" data-route="contact"><strong>Financial Services</strong><span>Secure, high-trust service environments that need speed and compliance.</span><span class="linkish">Ask about finance →</span></button>
+          <button class="industry route-link" data-route="contact"><strong>Education</strong><span>Modernize support and communication across institutions and departments.</span><span class="linkish">Ask about education →</span></button>
+          <button class="industry route-link" data-route="contact"><strong>Government</strong><span>Improve constituent and internal service workflows with less friction.</span><span class="linkish">Ask about government →</span></button>
+          <button class="industry route-link" data-route="contact"><strong>Manufacturing</strong><span>Support customer operations and internal teams with modern workflows.</span><span class="linkish">Ask about manufacturing →</span></button>
+          <button class="industry route-link" data-route="contact"><strong>Utilities</strong><span>Better service responsiveness for critical and regulated operations.</span><span class="linkish">Ask about utilities →</span></button>
+        </div>
+
+        <div class="split-grid" style="margin-top:30px;">
+          <div class="page-panel">
+            <div class="small-label">Why this matters</div>
+            <h2>Specialization builds trust.</h2>
+            <p>Visitors usually trust a company more when it clearly names who it serves and how it understands that market’s needs.</p>
+          </div>
+          <div class="page-panel">
+            <div class="small-label">Best next page</div>
+            <h2>Show them why EPIC.</h2>
+            <p>After someone sees their industry, the natural next question is why they should choose you.</p>
+            <div class="button-row">
+              <button class="btn btn-primary route-link" data-route="about">Go to About</button>
+              <button class="btn btn-secondary route-link" data-route="contact">Contact EPIC</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" data-page="about">
+      <div class="container">
+        <div class="kicker">About EPIC</div>
+        <h1 style="font-size:clamp(2.3rem,4.8vw,4.2rem);max-width:900px;">Keep the strengths. Present them with more polish.</h1>
+        <p class="lead">Your website should make prospects feel like they are dealing with a strategic partner, not a generic tech reseller. This page sharpens that message.</p>
+
+        <div class="grid-3" style="margin-top:28px;">
+          <div class="feature-item">
+            <h3>One clear point of contact</h3>
+            <p>We simplify evaluation, vendor coordination, and implementation so your team can move faster with less friction.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Partner-agnostic guidance</h3>
+            <p>Recommendations are based on fit, compliance needs, and business goals instead of one-size-fits-all product pushing.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Built for regulated environments</h3>
+            <p>Our solutions are designed to earn trust in industries where security, privacy, and reliability matter most.</p>
+          </div>
+        </div>
+
+        <div class="cta-grid" style="margin-top:30px;">
+          <div class="page-panel">
+            <div class="small-label">What the homepage should do</div>
+            <h2>The message should land quickly.</h2>
+            <div class="check-list">
+              <div class="check-item"><span class="dot"></span><span>Tell visitors exactly what EPIC does.</span></div>
+              <div class="check-item"><span class="dot"></span><span>Prove why they should trust you.</span></div>
+              <div class="check-item"><span class="dot"></span><span>Drive one clean next step.</span></div>
+            </div>
+          </div>
+          <div class="cta-panel">
+            <div class="small-label">Best conversion move</div>
+            <h2 style="font-size:2rem;">Book Your AI Consultation</h2>
+            <p>Replace scattered contact prompts with one stronger call to action in the header, key sections, and the contact page.</p>
+            <div class="button-row">
+              <button class="btn btn-primary route-link" data-route="contact">Request a consultation</button>
+              <button class="btn btn-secondary route-link" data-route="services">Review services</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" data-page="contact">
+      <div class="container">
+        <div class="kicker">Contact</div>
+        <h1 style="font-size:clamp(2.3rem,4.8vw,4.2rem);max-width:900px;">Ready for a cleaner, higher-converting site?</h1>
+        <p class="lead">This layout gives EPIC a more premium visual identity, clearer positioning, and a site structure that is easier to trust and easier to act on.</p>
+
+        <div class="contact-grid" style="margin-top:28px;">
+          <div class="contact-box">
+            <div class="small-label">Start the conversation</div>
+            <h2 style="font-size:2rem;">Tell EPIC what you need.</h2>
+            <p>Use the form to draft an email or click below to send a direct message. This keeps the contact step simple inside a Wix embed.</p>
+            <div class="button-row">
+              <a class="btn btn-primary" href="mailto:info@epiccorp.com?subject=AI%20Consultation">Email EPIC</a>
+              <button class="btn btn-secondary route-link" data-route="services">Review services</button>
+            </div>
+          </div>
+
+          <div class="contact-box">
+            <form onsubmit="sendEmail(event)">
+              <input class="field" id="name" type="text" placeholder="Name" required />
+              <input class="field" id="email" type="email" placeholder="Email" required />
+              <textarea class="field" id="project" placeholder="Tell us about your project" required></textarea>
+              <button class="btn btn-primary" type="submit">Request a Consultation</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container footer">
+    <span>EPIC Systems Corp • Multi-page style homepage for a Wix HTML embed</span>
+    <button class="route-link" data-route="home">Back to home</button>
+  </footer>
+
+  <script>
+    const routes = ['home', 'services', 'industries', 'about', 'contact'];
+    const mobileToggle = document.getElementById('mobileToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const pages = document.querySelectorAll('.page');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const routeButtons = document.querySelectorAll('.route-link');
+
+    function goToPage(route, updateHash = true) {
+      const safeRoute = routes.includes(route) ? route : 'home';
+
+      pages.forEach(page => {
+        page.classList.toggle('active', page.dataset.page === safeRoute);
+      });
+
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.dataset.route === safeRoute);
+      });
+
+      if (updateHash) {
+        window.location.hash = safeRoute;
+      }
+
+      if (mobileMenu.classList.contains('open')) {
+        mobileMenu.classList.remove('open');
+        mobileToggle.textContent = '☰';
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function routeFromHash() {
+      const hash = window.location.hash.replace('#', '');
+      return routes.includes(hash) ? hash : 'home';
+    }
+
+    routeButtons.forEach(button => {
+      button.addEventListener('click', function (event) {
+        const target = this.dataset.route;
+        if (target) {
+          event.preventDefault();
+          goToPage(target);
+        }
+      });
+    });
+
+    if (mobileToggle) {
+      mobileToggle.addEventListener('click', function () {
+        mobileMenu.classList.toggle('open');
+        mobileToggle.textContent = mobileMenu.classList.contains('open') ? '✕' : '☰';
+      });
+    }
+
+    window.addEventListener('hashchange', function () {
+      goToPage(routeFromHash(), false);
+    });
+
+    goToPage(routeFromHash(), false);
+
+    function sendEmail(event) {
+      event.preventDefault();
+      const name = encodeURIComponent(document.getElementById('name').value);
+      const email = encodeURIComponent(document.getElementById('email').value);
+      const project = encodeURIComponent(document.getElementById('project').value);
+      const subject = 'Consultation Request';
+      const body = `Name: ${name}%0AEmail: ${email}%0A%0AProject Details:%0A${project}`;
+      window.location.href = `mailto:info@epiccorp.com?subject=${subject}&body=${body}`;
+    }
+  </script>
+</body>
+</html>
